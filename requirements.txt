@@ -1,0 +1,7 @@
+# T-Mobile Bill to Splitwise Automation Dependencies
+playwright>=1.40.0
+google-genai
+splitwise>=2.4.0
+attrs>=23.0.0
+PyYAML>=6.0
+pprintpp==0.4.0
