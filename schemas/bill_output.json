@@ -1,0 +1,96 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "T-Mobile Bill LLM Output",
+    "description": "Schema for the structured output from LLM bill extraction",
+    "type": "object",
+    "required": [
+        "billing_period",
+        "paid_on",
+        "total_charge",
+        "lines",
+        "base_charge",
+        "equipment",
+        "services",
+        "one_time_charges"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "billing_period": {
+            "type": "string",
+            "description": "The billing period in 'DD Month YYYY - DD Month YYYY' format",
+            "pattern": "^\\d{2} [A-Z][a-z]+ \\d{4} - \\d{2} [A-Z][a-z]+ \\d{4}$"
+        },
+        "paid_on": {
+            "type": "string",
+            "description": "The date the bill was paid in 'DD Month YYYY' format",
+            "pattern": "^\\d{2} [A-Z][a-z]+ \\d{4}$"
+        },
+        "total_charge": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Total charge from the Totals row"
+        },
+        "lines": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "required": [
+                    "phone_number",
+                    "base_charge",
+                    "equipment",
+                    "services",
+                    "one_time_charges"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "phone_number": {
+                        "type": "string",
+                        "description": "Phone number in XXX-XXX-XXXX format",
+                        "pattern": "^\\d{3}-\\d{3}-\\d{4}$"
+                    },
+                    "base_charge": {
+                        "type": "number",
+                        "minimum": 0,
+                        "description": "Plans column value"
+                    },
+                    "equipment": {
+                        "type": "number",
+                        "minimum": 0,
+                        "description": "Equipment column value"
+                    },
+                    "services": {
+                        "type": "number",
+                        "minimum": 0,
+                        "description": "Services column value"
+                    },
+                    "one_time_charges": {
+                        "type": "number",
+                        "minimum": 0,
+                        "description": "One-time charges column value"
+                    }
+                }
+            }
+        },
+        "base_charge": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Total Plans from Totals row"
+        },
+        "equipment": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Total Equipment from Totals row"
+        },
+        "services": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Total Services from Totals row"
+        },
+        "one_time_charges": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Total One-time charges from Totals row"
+        }
+    }
+}

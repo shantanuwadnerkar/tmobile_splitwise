@@ -1,0 +1,46 @@
+You are analyzing a T-Mobile bill PDF.
+
+IMPORTANT: Only use the SUMMARY TABLE on the SECOND PAGE of the bill. This table has 6 columns:
+  Numbers | Line Type | Plans | Equipment | Services | One-time charges | Total
+
+Each row represents a single phone line or watch line with its phone number.
+
+## CRITICAL CONSTRAINT: For each line, the "Total" column value MUST equal Plans + Equipment + Services + One-time charges.
+
+Extract the data and return a JSON object with this exact structure:
+{{OUTPUT_SCHEMA}}
+
+For each line:
+  - Ignore the row with "Totals" and "Account"
+  - phone_number: The phone number (format: XXX-XXX-XXXX)
+  - base_charge: Value from the "Plans" column (3rd column). If the value is non-numeric (e.g., "Included", "Free", "$0.00"), set it to 0.00. Otherwise, set it to the numeric value.
+  - equipment: Value from the "Equipment" column (4th column)
+  - services: Value from the "Services" column (5th column)
+  - one_time_charges: Value from the "One-time charges" column (6th column) (this is an optional column, so set it to 0.00 if it is not present)
+
+For bill summary charge:
+  - billing_period: The period for "regular charges" (e.g. December 17, 2025 - January 16, 2026)
+  - paid_on: 2 days before the due date (e.g. January 14, 2026)
+  - total_charge: This comes from the "Totals" row and "Total" column. It is the total amount of the bill.
+  - base_charge: This comes from the "Totals" row and "Plans" column. It is the total base amount of the bill.
+  - equipment: This comes from the "Totals" row and "Equipment" column. It is the equipment amount of the bill.
+  - services: This comes from the "Totals" row and "Services" column. It is the services amount of the bill.
+  - one_time_charges: This comes from the "Totals" row and "One-time charges" column. It is the one-time charges amount of the bill. (this is an optional column, so set it to 0.00 if it is not present)
+
+Rules:
+- Extract EXACT values from the bill. Do not estimate or calculate.
+- Use 0.00 for empty or missing cells.
+- Every line in the summary table must appear in either phone_lines or watch_lines.
+- ONLY return the JSON object, no other text or markdown formatting.
+- Phone Numbers or line numbers should be in the format XXX-XXX-XXXX. All other formats such as (XXX) XXX-XXXX or XXX XXX XXXX or +1 XXX XXX XXXX or +1(XXX) XXX-XXXX should be converted to this format.
+
+Excluded numbers:
+- 530-636-5467
+
+Rules for excluded numbers:
+- These numbers are not included in the bill summary table.
+- These numbers are not included in the phone_lines or watch_lines.
+- Any base charge associated with these numbers should be part of the bill summary "base_charge" field.
+- Any equipment charge associated with these numbers should be part of the bill summary "equipment" field.
+- Any services charge associated with these numbers should be part of the bill summary "services" field.
+- Any one-time charge associated with these numbers should be part of the bill summary "one_time_charges" field.
